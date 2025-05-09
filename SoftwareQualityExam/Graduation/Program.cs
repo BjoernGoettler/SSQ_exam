@@ -1,8 +1,30 @@
+using Graduation.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+
+DotNetEnv.Env.Load("database.env");
+DotNetEnv.Env.Load(".env");
+
+
 var builder = WebApplication.CreateBuilder(args);
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+var serverVersion = new MySqlServerVersion(new Version(8, 0, 29)); // Adjust version as needed
+
+// Register DbContext with MySQL
+builder.Services.AddDbContext<DatabaseContext>(options =>
+    options.UseMySql(connectionString, serverVersion, 
+        mysqlOptions => 
+        {
+            // Enable retrying failed database operations
+            mysqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(30),
+                errorNumbersToAdd: null);
+        }
+    ));
 
 var app = builder.Build();
 
@@ -12,30 +34,4 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-    {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast");
-
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

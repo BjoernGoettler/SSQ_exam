@@ -1,13 +1,16 @@
+using Microsoft.EntityFrameworkCore;
+using Graduation.Models;
+
 namespace Graduation.Infrastructure;
 
-using Microsoft.EntityFrameworkCore;
 
-public class ApplicationDbContext : DbContext
+
+public class DatabaseContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    public DatabaseContext(DbContextOptions<DatabaseContext> options)
         : base(options)
     {
     }
 
-    public DbSet<Product> Products { get; set; }
+    public DbSet<GraduationDetail> GraduationDetails { get; set; }
 }
