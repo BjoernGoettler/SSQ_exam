@@ -3,7 +3,7 @@
 services:
 
   db:
-    image: mysql
+    image: mysql:8.0.29
     restart: always
     env_file:
       - database.env
