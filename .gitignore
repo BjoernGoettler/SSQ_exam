@@ -52,4 +52,10 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Rider
 .idea
+
+# Credentials
+database.env
+
