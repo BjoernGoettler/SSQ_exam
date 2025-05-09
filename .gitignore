@@ -58,4 +58,4 @@ nunit-*.xml
 
 # Credentials
 database.env
-
+.env
