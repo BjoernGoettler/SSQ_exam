@@ -1,8 +1,9 @@
-﻿using Graduation.Interfaces;
+using Graduation.Interfaces;
 using Graduation.Models;
-using Graduation.Repositories;
+using Graduation.Services;
 using Graduation.Test.Fixtures;
-namespace Graduation.Test.RepositoryTests;
+
+namespace Graduation.Test.ServiceTests;
 
 [TestFixture]
 public class GetAllAsyncTest: TestBase
@@ -11,12 +12,12 @@ public class GetAllAsyncTest: TestBase
     private int expectedId = 1;
     
     
-    private IGraduationRepository _graduationRepository ;
+    private IGraduationService _graduationService ;
     [SetUp]
     public override void SetUp()
     {
         base.SetUp();
-        _graduationRepository = new GraduationRepository(DbContext);
+        _graduationService = new GraduationService(DbContext);
         
         // Optionally: Seed specific test data for this test class
         SeedTestData();
@@ -43,7 +44,7 @@ public class GetAllAsyncTest: TestBase
     [Test]
     public async Task TestGetAllAsync()
     {
-        var allDetails = await _graduationRepository.GetAllAsync();
+        var allDetails = await _graduationService.GetAllAsync();
         Assert.Multiple(() =>
         {
             Assert.That(allDetails, Is.Not.Empty);
