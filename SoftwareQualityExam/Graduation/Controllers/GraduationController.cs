@@ -1,4 +1,5 @@
 using Graduation.DataTransferObjects;
+using Graduation.Exceptions;
 using Graduation.Infrastructure;
 using Graduation.Interfaces;
 using Graduation.Services;
@@ -21,10 +22,19 @@ public class GraduationController: ControllerBase
     [Route("api/graduation")]
     public async Task<ActionResult<List<GraduationDetailOut>>> GetAllAsync()
         => await _graduationService.GetAllAsync();
-    
+
     [HttpPost]
     [Route("api/graduation")]
     public async Task<ActionResult<GraduationDetailOut>> CreateAsync([FromBody] GraduationDetailIn graduationDetailIn)
-        => await _graduationService.CreateAsync(graduationDetailIn);
-
+    {
+        try
+        {
+            return await _graduationService.CreateAsync(graduationDetailIn);
+        }
+        catch (DuplicateEntryException)
+        {
+            var errorMessage = $"Another graduation is already registered on this date {graduationDetailIn.GraduationDate}.";
+            return Conflict(errorMessage);
+        }
+    }
 }

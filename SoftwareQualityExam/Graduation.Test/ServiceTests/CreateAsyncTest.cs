@@ -3,6 +3,7 @@ using Graduation.Interfaces;
 using Graduation.Models;
 using Graduation.Services;
 using Graduation.Test.Fixtures;
+using Microsoft.EntityFrameworkCore;
 
 namespace Graduation.Test.ServiceTests;
 
@@ -15,6 +16,13 @@ public class CreateAsyncTest: TestBase
     {
         base.SetUp();
         _graduationService = new GraduationService(DbContext);
+        SeedTestData();
+    }
+    
+    private void SeedTestData()
+    {
+        DbContext.GraduationDetails.ExecuteDelete();
+        DbContext.SaveChanges();
     }
     
     [Test]
@@ -23,9 +31,8 @@ public class CreateAsyncTest: TestBase
         GraduationDetailIn graduationDetailIn = new GraduationDetailIn
         {
             Name = "TestGraduation",
-            GraduationDate = new DateOnly(2025, 5, 1)
+            GraduationDate = new DateOnly(2025, 5, 3)
         };
-        
         var actualGraduationDetail = await _graduationService.CreateAsync(graduationDetailIn);
         
         Assert.Multiple(() =>

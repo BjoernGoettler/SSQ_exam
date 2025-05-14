@@ -1,4 +1,5 @@
 using Graduation.DataTransferObjects;
+using Graduation.Exceptions;
 using Graduation.Infrastructure;
 using Graduation.Interfaces;
 using Graduation.Models;
@@ -37,15 +38,35 @@ public class GraduationService: IGraduationService
             GraduationDate = graduationDetailIn.GraduationDate,
             CreatedAt = DateTime.Now
         };
-        
-        var actualGraduationDetail = await _graduationRepository.CreateAsync(graduationDetail);
 
-        return new GraduationDetailOut
+        try
         {
-            Id = actualGraduationDetail.Id,
-            Name = actualGraduationDetail.Name,
-            GraduationDate = actualGraduationDetail.GraduationDate,
-            CreatedAt = actualGraduationDetail.CreatedAt
-        };
+            var actualGraduationDetail = await _graduationRepository.CreateAsync(graduationDetail);
+            return new GraduationDetailOut
+            {
+                Id = actualGraduationDetail.Id,
+                Name = actualGraduationDetail.Name,
+                GraduationDate = actualGraduationDetail.GraduationDate,
+                CreatedAt = actualGraduationDetail.CreatedAt
+            };
+
+        }
+        catch (Microsoft.EntityFrameworkCore.DbUpdateException e)
+        {
+            if (e.InnerException is Microsoft.Data.Sqlite.SqliteException)
+            {
+                if (e.InnerException.Message.StartsWith("SQLite Error 19: 'UNIQUE constraint failed"))
+                {
+                    var errorMessage =
+                        $"Another graduation is already registered on {graduationDetailIn.GraduationDate}.";
+                    throw new DuplicateEntryException(errorMessage);
+                }
+            }
+            
+            throw;
+        }
+        
+
+        
     }
 }
