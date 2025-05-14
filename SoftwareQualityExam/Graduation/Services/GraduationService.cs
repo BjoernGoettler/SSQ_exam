@@ -1,6 +1,7 @@
 using Graduation.DataTransferObjects;
 using Graduation.Infrastructure;
 using Graduation.Interfaces;
+using Graduation.Models;
 using Graduation.Repositories;
 
 namespace Graduation.Services;
@@ -26,5 +27,25 @@ public class GraduationService: IGraduationService
             GraduationDate = x.GraduationDate,
             CreatedAt = x.CreatedAt
         }).ToList();
+    }
+
+    public async Task<GraduationDetailOut> CreateAsync(GraduationDetailIn graduationDetailIn)
+    {
+        GraduationDetail graduationDetail = new GraduationDetail
+        {
+            Name = graduationDetailIn.Name,
+            GraduationDate = graduationDetailIn.GraduationDate,
+            CreatedAt = DateTime.Now
+        };
+        
+        var actualGraduationDetail = await _graduationRepository.CreateAsync(graduationDetail);
+
+        return new GraduationDetailOut
+        {
+            Id = actualGraduationDetail.Id,
+            Name = actualGraduationDetail.Name,
+            GraduationDate = actualGraduationDetail.GraduationDate,
+            CreatedAt = actualGraduationDetail.CreatedAt
+        };
     }
 }
