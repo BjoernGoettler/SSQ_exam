@@ -21,5 +21,10 @@ public class GraduationController: ControllerBase
     [Route("api/graduation")]
     public async Task<ActionResult<List<GraduationDetailOut>>> GetAllAsync()
         => await _graduationService.GetAllAsync();
+    
+    [HttpPost]
+    [Route("api/graduation")]
+    public async Task<ActionResult<GraduationDetailOut>> CreateAsync([FromBody] GraduationDetailIn graduationDetailIn)
+        => await _graduationService.CreateAsync(graduationDetailIn);
 
 }
