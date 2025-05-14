@@ -1,6 +1,7 @@
 using Graduation.DataTransferObjects;
 using Graduation.Infrastructure;
 using Graduation.Interfaces;
+using Graduation.Repositories;
 
 namespace Graduation.Services;
 
@@ -8,9 +9,12 @@ public class GraduationService: IGraduationService
 {
     private readonly IGraduationRepository _graduationRepository;
     private readonly DatabaseContext _databaseContext;
-    
+
     public GraduationService(DatabaseContext databaseContext)
-        => _databaseContext = databaseContext;
+    {
+        _databaseContext = databaseContext;
+        _graduationRepository = new GraduationRepository(_databaseContext);
+    }
 
     public async Task<List<GraduationDetailOut>> GetAllAsync()
     {
