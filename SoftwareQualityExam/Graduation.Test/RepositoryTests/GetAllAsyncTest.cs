@@ -2,7 +2,7 @@
 using Graduation.Models;
 using Graduation.Repositories;
 using Graduation.Test.Fixtures;
-namespace Graduation.Test;
+namespace Graduation.Test.RepositoryTests;
 
 [TestFixture]
 public class GetAllAsyncTest: TestBase
@@ -51,7 +51,5 @@ public class GetAllAsyncTest: TestBase
             Assert.That(allDetails[0].Id, Is.EqualTo(expectedId));
 
         });
-
-
     }
 }
