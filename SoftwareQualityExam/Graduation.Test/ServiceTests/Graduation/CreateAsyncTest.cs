@@ -1,11 +1,10 @@
 using Graduation.DataTransferObjects;
 using Graduation.Interfaces;
-using Graduation.Models;
 using Graduation.Services;
 using Graduation.Test.Fixtures;
 using Microsoft.EntityFrameworkCore;
 
-namespace Graduation.Test.ServiceTests;
+namespace Graduation.Test.ServiceTests.Graduation;
 
 [TestFixture]
 public class CreateAsyncTest: TestBase
@@ -14,34 +13,29 @@ public class CreateAsyncTest: TestBase
     [SetUp]
     public override async Task SetUp()
     {
-        base.SetUp();
+        await base.SetUp();
         _graduationService = new GraduationService(DbContext);
         await SeedTestData();
     }
     
-    private Task SeedTestData()
+    private async Task SeedTestData()
     {
-        DbContext.GraduationDetails.ExecuteDelete();
-        DbContext.SaveChanges();
-        return Task.CompletedTask;
+        await DbContext.GraduationDetails.ExecuteDeleteAsync();
+        await DbContext.SaveChangesAsync();
     }
     
     [Test]
     public async Task TestCreateAsync()
     {
-        GraduationDetailIn graduationDetailIn = new GraduationDetailIn
-        {
-            Name = "TestGraduation",
-            GraduationDate = new DateOnly(2025, 5, 3)
-        };
-        var actualGraduationDetail = await _graduationService.CreateAsync(graduationDetailIn);
+        GraduationDetailIn expectedGraduationDetailIn = TestData.DtoGraduationDetails.ValidDtoGraduationDetailIn;
+        var actualGraduationDetail = await _graduationService.CreateAsync(expectedGraduationDetailIn);
         
         Assert.Multiple(() =>
         {
             Assert.That(actualGraduationDetail, Is.Not.Null);
             Assert.That(actualGraduationDetail.Id, Is.GreaterThan(0));
-            Assert.That(actualGraduationDetail.Name, Is.EqualTo(graduationDetailIn.Name));
-            Assert.That(actualGraduationDetail.GraduationDate, Is.EqualTo(graduationDetailIn.GraduationDate));
+            Assert.That(actualGraduationDetail.Name, Is.EqualTo(expectedGraduationDetailIn.Name));
+            Assert.That(actualGraduationDetail.GraduationDate, Is.EqualTo(expectedGraduationDetailIn.GraduationDate));
         });
         
         

@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using Graduation.Interfaces;
 using Graduation.Repositories;
 using Graduation.Test.Fixtures;
@@ -24,8 +23,8 @@ public class GetAllUsersAsyncTest: TestBase
         await DbContext.Users.ExecuteDeleteAsync();
         await DbContext.Users.AddRangeAsync(new[]
         {
-            new Models.User { Id = 1, Name = "User1" },
-            new Models.User { Id = 2, Name = "User2" }
+            TestData.DatabaseUsers.ValidDatabaseUser3,
+            TestData.DatabaseUsers.ValidDatabaseUser4,
         });
         await DbContext.SaveChangesAsync();
     }

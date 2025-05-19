@@ -1,6 +1,7 @@
 using Graduation.Interfaces;
 using Graduation.Repositories;
 using Graduation.Test.Fixtures;
+using Microsoft.EntityFrameworkCore;
 
 namespace Graduation.Test.RepositoryTests.User;
 
@@ -15,15 +16,16 @@ public class CreateUserAsyncTest: TestBase
         await base.SetUp();
         _graduationRepository = new GraduationRepository(DbContext);
     }
+
+    public async Task SeedTestData()
+    {
+        await DbContext.Users.ExecuteDeleteAsync();
+    }
     
     [Test]
     public async Task TestCreateUserAsync()
     {
-        var expectedUser = new Models.User
-        {
-            Id = 1,
-            Name = "TestUser"
-        };
+        var expectedUser = TestData.DatabaseUsers.ValidDatabaseUser1;
         
         var actualUser = await _graduationRepository.CreateUserAsync(expectedUser);
         

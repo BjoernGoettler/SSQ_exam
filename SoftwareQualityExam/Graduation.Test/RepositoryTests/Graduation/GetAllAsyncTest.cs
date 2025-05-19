@@ -2,7 +2,10 @@
 using Graduation.Models;
 using Graduation.Repositories;
 using Graduation.Test.Fixtures;
-namespace Graduation.Test.RepositoryTests;
+using Graduation.Test.TestData;
+using Microsoft.EntityFrameworkCore;
+
+namespace Graduation.Test.RepositoryTests.Graduation;
 
 [TestFixture]
 public class GetAllAsyncTest: TestBase
@@ -22,23 +25,15 @@ public class GetAllAsyncTest: TestBase
         await SeedTestData();
     }
     
-    private Task SeedTestData()
+    private async Task SeedTestData()
     {
-        // Add test graduation data if needed
-        if (!DbContext.GraduationDetails.Any())
+        await DbContext.GraduationDetails.ExecuteDeleteAsync();
+        await DbContext.GraduationDetails.AddRangeAsync(new[]
         {
-            _graduationDetail = new GraduationDetail
-            {
-                Id = expectedId,
-                Name = "TestGraduation",
-                GraduationDate = new DateOnly(2025, 5, 1),
-                CreatedAt = DateTime.Now
-            };
-            DbContext.GraduationDetails.Add(_graduationDetail);
-            
-            DbContext.SaveChanges();
-        }
-        return Task.CompletedTask;
+            TestGraduationDetails.ValidGraduationDetails1,
+            TestGraduationDetails.ValidGraduationDetails2,
+        });
+        await DbContext.SaveChangesAsync();
     }
 
     [Test]
