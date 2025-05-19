@@ -13,16 +13,16 @@ public class GetAllAsyncTest: TestBase
     
     private IGraduationRepository _graduationRepository ;
     [SetUp]
-    public override void SetUp()
+    public override async Task SetUp()
     {
-        base.SetUp();
+        await base.SetUp();
         _graduationRepository = new GraduationRepository(DbContext);
         
         // Optionally: Seed specific test data for this test class
-        SeedTestData();
+        await SeedTestData();
     }
     
-    private void SeedTestData()
+    private Task SeedTestData()
     {
         // Add test graduation data if needed
         if (!DbContext.GraduationDetails.Any())
@@ -38,6 +38,7 @@ public class GetAllAsyncTest: TestBase
             
             DbContext.SaveChanges();
         }
+        return Task.CompletedTask;
     }
 
     [Test]

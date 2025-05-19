@@ -11,9 +11,9 @@ public class CreateAsyncTest: TestBase
     private IGraduationRepository _graduationRepository ;
     
     [SetUp]
-    public override void SetUp()
+    public override async Task SetUp()
     {
-        base.SetUp();
+        await base.SetUp();
         _graduationRepository = new GraduationRepository(DbContext);
     }
     

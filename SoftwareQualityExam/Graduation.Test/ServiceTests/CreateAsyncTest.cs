@@ -12,17 +12,18 @@ public class CreateAsyncTest: TestBase
 {
     private IGraduationService _graduationService ;
     [SetUp]
-    public override void SetUp()
+    public override async Task SetUp()
     {
         base.SetUp();
         _graduationService = new GraduationService(DbContext);
-        SeedTestData();
+        await SeedTestData();
     }
     
-    private void SeedTestData()
+    private Task SeedTestData()
     {
         DbContext.GraduationDetails.ExecuteDelete();
         DbContext.SaveChanges();
+        return Task.CompletedTask;
     }
     
     [Test]

@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Graduation.Test.ServiceTests;
 
+[TestFixture]
+
 public class CreateAsyncFailsTest: TestBase
 {
     private IGraduationService _graduationService ;
@@ -15,14 +17,14 @@ public class CreateAsyncFailsTest: TestBase
     private readonly DateOnly _graduationDate = new DateOnly(2025, 5, 1);
     
     [SetUp]
-    public override void SetUp()
+    public override async Task SetUp()
     {
-        base.SetUp();
+        await base.SetUp();
         _graduationService = new GraduationService(DbContext);
-        SeedTestData();
+        await SeedTestData();
     }
     
-    private void SeedTestData()
+    private Task SeedTestData()
     {
         DbContext.GraduationDetails.ExecuteDelete();
         
@@ -35,6 +37,7 @@ public class CreateAsyncFailsTest: TestBase
         DbContext.GraduationDetails.Add(_graduationDetail);
         
         DbContext.SaveChanges();
+        return Task.CompletedTask;
     }
     
     [Test]
