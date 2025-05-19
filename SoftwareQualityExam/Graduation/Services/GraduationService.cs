@@ -81,4 +81,14 @@ public class GraduationService: IGraduationService
             Name = createdUser.Name
         };
     }
+    
+    public async Task<List<UserOut>> GetAllUsersAsync()
+    {
+        var users = await _graduationRepository.GetAllUsersAsync();
+        return users.Select(x => new UserOut
+        {
+            Id = x.Id,
+            Name = x.Name
+        }).ToList();
+    }
 }
