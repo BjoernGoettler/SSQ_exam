@@ -38,4 +38,11 @@ public class GetAllUsersAsyncTest : TestBase
             }
         );
     }
+    
+    [TearDown]
+    public override async Task TearDown()
+    {
+        // Clean up resources if needed
+        await base.TearDown();
+    }
 }

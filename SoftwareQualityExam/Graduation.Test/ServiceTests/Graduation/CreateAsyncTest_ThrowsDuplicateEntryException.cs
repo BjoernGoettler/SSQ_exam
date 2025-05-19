@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Graduation.Test.ServiceTests.Graduation;
 
 [TestFixture]
-public class CreateAsyncFailsTest : TestBase
+public class CreateAsyncTest_ThrowsDuplicateEntryException : TestBase
 {
     [SetUp]
     public override async Task SetUp()
@@ -25,7 +25,7 @@ public class CreateAsyncFailsTest : TestBase
     private async Task SeedTestData()
     {
         await DbContext.GraduationDetails.ExecuteDeleteAsync();
-        await DbContext.GraduationDetails.AddAsync(TestGraduationDetails.ValidGraduationDetails1);
+        await DbContext.GraduationDetails.AddAsync(TestGraduationDetails.DuplicateGraduationDetail);
     }
 
     [Test]
@@ -33,5 +33,11 @@ public class CreateAsyncFailsTest : TestBase
     {
         var graduationDetailIn = DtoGraduationDetails.DuplicateDtoGraduationDetailIn;
         Assert.ThrowsAsync<DuplicateEntryException>(() => _graduationService.CreateAsync(graduationDetailIn));
+    }
+    [TearDown]
+    public override async Task TearDown()
+    {
+        // Clean up resources if needed
+        await base.TearDown();
     }
 }

@@ -28,6 +28,11 @@ public class GetAllAsyncTest : TestBase
     private async Task SeedTestData()
     {
         await DbContext.GraduationDetails.ExecuteDeleteAsync();
+        await DbContext.SaveChangesAsync();
+        var remaining = await DbContext.GraduationDetails.CountAsync();
+        Assert.That(remaining, Is.EqualTo(0), "Database should be empty after cleanup");
+
+
         await DbContext.GraduationDetails.AddRangeAsync(TestGraduationDetails.ValidGraduationDetails);
         await DbContext.SaveChangesAsync();
     }
@@ -42,4 +47,12 @@ public class GetAllAsyncTest : TestBase
             Assert.That(allDetails.Count, Is.AtLeast(2));
         });
     }
+    
+    [TearDown]
+    public override async Task TearDown()
+    {
+        // Clean up resources if needed
+        await base.TearDown();
+    }
+
 }

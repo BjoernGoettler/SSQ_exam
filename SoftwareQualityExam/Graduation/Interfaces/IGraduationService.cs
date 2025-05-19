@@ -11,4 +11,6 @@ public interface IGraduationService
     public Task<UserOut> CreateUserAsync(UserIn user);
 
     public Task<List<UserOut>> GetAllUsersAsync();
+
+    public Task<UserOut> GradeUserAsync(UserDto userDto);
 }

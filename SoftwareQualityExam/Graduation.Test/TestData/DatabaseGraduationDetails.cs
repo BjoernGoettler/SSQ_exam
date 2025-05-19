@@ -7,7 +7,7 @@ public static class TestGraduationDetails
     public static readonly GraduationDetail ValidGraduationDetails1 = new()
     {
         Name = "Valid Test Graduation 1",
-        GraduationDate = Dates.FixedDate,
+        GraduationDate = Dates.May1St,
         CreatedAt = DateTime.Now
     };
 
@@ -18,10 +18,24 @@ public static class TestGraduationDetails
         CreatedAt = DateTime.Now
     };
 
+    public static readonly GraduationDetail ValidGraduationDetails3 = new()
+    {
+        Name = "Valid Test Graduation 3",
+        GraduationDate = new DateOnly(2025, 6, 2),
+        CreatedAt = DateTime.Now
+    };
+
+    public static readonly GraduationDetail ValidGraduationDetails4 = new()
+    {
+        Name = "Valid Test Graduation 4",
+        GraduationDate = new DateOnly(2025, 6, 3),
+        CreatedAt = DateTime.Now
+    };
+
     public static readonly GraduationDetail DuplicateGraduationDetail = new()
     {
         Name = "Duplicate Test Graduation",
-        GraduationDate = Dates.FixedDate
+        GraduationDate = Dates.August1St
     };
 
     public static readonly GraduationDetail[] ValidGraduationDetails = new[]

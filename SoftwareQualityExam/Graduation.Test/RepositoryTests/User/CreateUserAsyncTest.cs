@@ -14,6 +14,7 @@ public class CreateUserAsyncTest : TestBase
     {
         await base.SetUp();
         _graduationRepository = new GraduationRepository(DbContext);
+        await SeedTestData();
     }
 
     private IGraduationRepository _graduationRepository;
@@ -21,6 +22,7 @@ public class CreateUserAsyncTest : TestBase
     public async Task SeedTestData()
     {
         await DbContext.Users.ExecuteDeleteAsync();
+        await DbContext.SaveChangesAsync();
     }
 
     [Test]
@@ -37,5 +39,12 @@ public class CreateUserAsyncTest : TestBase
                 Assert.That(actualUser.Name, Is.EqualTo(expectedUser.Name));
             }
         );
+    }
+    
+    [TearDown]
+    public override async Task TearDown()
+    {
+        // Clean up resources if needed
+        await base.TearDown();
     }
 }

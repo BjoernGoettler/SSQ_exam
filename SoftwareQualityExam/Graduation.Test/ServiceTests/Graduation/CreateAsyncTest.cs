@@ -23,12 +23,15 @@ public class CreateAsyncTest : TestBase
     {
         await DbContext.GraduationDetails.ExecuteDeleteAsync();
         await DbContext.SaveChangesAsync();
+        var existingGraduations = await DbContext.GraduationDetails.ToListAsync();
+        Assert.That(existingGraduations, Is.Empty, "Database should be empty after SeedTestData");
     }
+
 
     [Test]
     public async Task TestCreateAsync()
     {
-        var expectedGraduationDetailIn = DtoGraduationDetails.ValidDtoGraduationDetailIn;
+        var expectedGraduationDetailIn = DtoGraduationDetails.ValidDtoGraduationDetailIn1;
         var actualGraduationDetail = await _graduationService.CreateAsync(expectedGraduationDetailIn);
 
         Assert.Multiple(() =>
@@ -38,5 +41,11 @@ public class CreateAsyncTest : TestBase
             Assert.That(actualGraduationDetail.Name, Is.EqualTo(expectedGraduationDetailIn.Name));
             Assert.That(actualGraduationDetail.GraduationDate, Is.EqualTo(expectedGraduationDetailIn.GraduationDate));
         });
+    }
+    [TearDown]
+    public override async Task TearDown()
+    {
+        // Clean up resources if needed
+        await base.TearDown();
     }
 }
