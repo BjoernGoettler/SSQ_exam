@@ -13,4 +13,5 @@ public class DatabaseContext : DbContext
     }
 
     public DbSet<GraduationDetail> GraduationDetails { get; set; }
+    public DbSet<User> Users { get; set; }
 }
