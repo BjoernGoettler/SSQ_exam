@@ -9,19 +9,11 @@ public class CreateUserAsyncTest: TestBase
 {
     private IGraduationRepository _graduationRepository ;
 
-    private readonly Models.User _testUser = new Models.User
-    {
-        Id = 11111,
-        Name = "Expected User"
-    };
-
     [SetUp]
     public override async Task SetUp()
     {
         await base.SetUp();
         _graduationRepository = new GraduationRepository(DbContext);
-        await DbContext.AddAsync(_testUser);
-        await DbContext.SaveChangesAsync();
     }
     
     [Test]
