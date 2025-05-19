@@ -1,9 +1,7 @@
-using Microsoft.EntityFrameworkCore;
 using Graduation.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Graduation.Infrastructure;
-
-
 
 public class DatabaseContext : DbContext
 {

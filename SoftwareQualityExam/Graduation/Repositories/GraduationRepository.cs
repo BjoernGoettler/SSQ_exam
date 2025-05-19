@@ -5,33 +5,34 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Graduation.Repositories;
 
-public class GraduationRepository: IGraduationRepository
+public class GraduationRepository : IGraduationRepository
 {
     private readonly DatabaseContext _databaseContext;
-    
+
     public GraduationRepository(DatabaseContext databaseContext)
-        => _databaseContext = databaseContext;
+    {
+        _databaseContext = databaseContext;
+    }
 
     public async Task<List<GraduationDetail>> GetAllAsync()
-        => await _databaseContext.GraduationDetails.ToListAsync();
+    {
+        return await _databaseContext.GraduationDetails.ToListAsync();
+    }
 
     public async Task<GraduationDetail> GetByIdAsync(int id)
     {
         var graduationDetail = await _databaseContext.GraduationDetails.FirstAsync(x => x.Id == id);
-        if (graduationDetail == null)
-        {
-            throw new KeyNotFoundException($"GraduationDetail with id {id} not found.");
-        }
+        if (graduationDetail == null) throw new KeyNotFoundException($"GraduationDetail with id {id} not found.");
         return graduationDetail;
     }
-    
+
     public async Task<GraduationDetail> CreateAsync(GraduationDetail graduationDetail)
     {
         await _databaseContext.GraduationDetails.AddAsync(graduationDetail);
         await _databaseContext.SaveChangesAsync();
         return graduationDetail;
     }
-    
+
     public async Task<bool> UpdateAsync(GraduationDetail graduationDetail)
     {
         _databaseContext.GraduationDetails.Update(graduationDetail);
@@ -57,10 +58,7 @@ public class GraduationRepository: IGraduationRepository
     public async Task<User> GetUserByIdAsync(int id)
     {
         var user = await _databaseContext.Users.FirstAsync(x => x.Id == id);
-        if (user == null)
-        {
-            throw new KeyNotFoundException($"User with id {id} not found.");
-        }
+        if (user == null) throw new KeyNotFoundException($"User with id {id} not found.");
 
         return user;
     }
@@ -81,6 +79,7 @@ public class GraduationRepository: IGraduationRepository
     }
 
     public async Task<List<User>> GetAllUsersAsync()
-        => await _databaseContext.Users.ToListAsync();
-
+    {
+        return await _databaseContext.Users.ToListAsync();
+    }
 }

@@ -1,5 +1,4 @@
 using Graduation.Interfaces;
-using Graduation.Models;
 using Graduation.Repositories;
 using Graduation.Test.Fixtures;
 using Graduation.Test.TestData;
@@ -8,10 +7,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Graduation.Test.RepositoryTests.Graduation;
 
 [TestFixture]
-public class CreateAsyncTest: TestBase
+public class CreateAsyncTest : TestBase
 {
-    private IGraduationRepository _graduationRepository ;
-    
     [SetUp]
     public override async Task SetUp()
     {
@@ -19,6 +16,8 @@ public class CreateAsyncTest: TestBase
         _graduationRepository = new GraduationRepository(DbContext);
         await SeedTestData();
     }
+
+    private IGraduationRepository _graduationRepository;
 
     private async Task SeedTestData()
     {
@@ -28,10 +27,10 @@ public class CreateAsyncTest: TestBase
     [Test]
     public async Task TestCreateAsync()
     {
-        GraduationDetail graduationDetail = TestGraduationDetails.ValidGraduationDetails1;
-        
+        var graduationDetail = TestGraduationDetails.ValidGraduationDetails1;
+
         var actualGraduationDetail = await _graduationRepository.CreateAsync(graduationDetail);
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(actualGraduationDetail, Is.Not.Null);

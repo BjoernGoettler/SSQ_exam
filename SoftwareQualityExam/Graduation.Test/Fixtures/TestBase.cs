@@ -1,5 +1,4 @@
 using Graduation.Infrastructure;
-using Microsoft.EntityFrameworkCore;
 
 namespace Graduation.Test.Fixtures;
 
@@ -8,11 +7,13 @@ public abstract class TestBase
     private static readonly SemaphoreSlim _initLock = new(1, 1);
     private static readonly TestDatabaseFixture TestDatabaseFixture = new();
     protected DatabaseContext DbContext => TestDatabaseFixture.DbContext;
-    
+
     [OneTimeSetUp]
     public async Task OneTimeSetUp()
-        => await TestDatabaseFixture.InitializeDatabase();
-    
+    {
+        await TestDatabaseFixture.InitializeDatabase();
+    }
+
     [SetUp]
     public virtual async Task SetUp()
     {
@@ -28,7 +29,7 @@ public abstract class TestBase
             _initLock.Release();
         }
     }
-    
+
     [TearDown]
     public async Task TearDown()
     {
@@ -40,5 +41,4 @@ public abstract class TestBase
     {
         return Task.CompletedTask;
     }
-    
 }

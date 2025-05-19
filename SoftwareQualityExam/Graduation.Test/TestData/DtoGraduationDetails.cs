@@ -4,14 +4,13 @@ namespace Graduation.Test.TestData;
 
 public static class DtoGraduationDetails
 {
-    
-    public static readonly GraduationDetailIn ValidDtoGraduationDetailIn = new GraduationDetailIn
+    public static readonly GraduationDetailIn ValidDtoGraduationDetailIn = new()
     {
         Name = "Valid DTO Graduation Detail",
         GraduationDate = Dates.FixedDate
     };
 
-    public static readonly GraduationDetailIn DuplicateDtoGraduationDetailIn = new GraduationDetailIn
+    public static readonly GraduationDetailIn DuplicateDtoGraduationDetailIn = new()
     {
         Name = "Duplicate DTO Graduation Detail",
         GraduationDate = Dates.FixedDate
@@ -30,5 +29,4 @@ public static class DtoGraduationDetails
             GraduationDate = new DateOnly(2025, 5, 14)
         }
     };
-
 }
