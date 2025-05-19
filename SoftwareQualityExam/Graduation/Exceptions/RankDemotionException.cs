@@ -1,5 +1,3 @@
-using Graduation.Core;
-
 namespace Graduation.Exceptions;
 
 public class RankDemotionException : Exception

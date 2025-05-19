@@ -4,16 +4,16 @@ namespace Graduation.Test.TestData;
 
 public static class DtoGraduationDetails
 {
-    public static readonly GraduationDetailIn ValidDtoGraduationDetailIn = new()
+    public static readonly GraduationDetailIn ValidDtoGraduationDetailIn1 = new()
     {
         Name = "Valid DTO Graduation Detail",
-        GraduationDate = Dates.FixedDate
+        GraduationDate = new DateOnly(2026, 1, 1)
     };
 
     public static readonly GraduationDetailIn DuplicateDtoGraduationDetailIn = new()
     {
         Name = "Duplicate DTO Graduation Detail",
-        GraduationDate = Dates.FixedDate
+        GraduationDate = Dates.August1St
     };
 
     public static readonly GraduationDetailIn[] ValidGraduationDetailsIn = new[]
@@ -21,12 +21,12 @@ public static class DtoGraduationDetails
         new GraduationDetailIn
         {
             Name = "First Valid DTO Graduation Detail in list",
-            GraduationDate = new DateOnly(2025, 5, 13)
+            GraduationDate = new DateOnly(2025, 5, 15)
         },
         new GraduationDetailIn
         {
             Name = "Second Valid DTO Graduation Detail in list",
-            GraduationDate = new DateOnly(2025, 5, 14)
+            GraduationDate = new DateOnly(2025, 5, 16)
         }
     };
 }

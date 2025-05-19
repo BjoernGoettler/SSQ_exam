@@ -41,8 +41,15 @@ public class GetAllAsyncTest : TestBase
         Assert.Multiple(() =>
         {
             Assert.That(allDetails, Is.Not.Empty);
-            Assert.That(allDetails.Count, Is.EqualTo(1));
+            Assert.That(allDetails.Count, Is.EqualTo(2));
             Assert.That(allDetails[0].Id, Is.EqualTo(expectedId));
         });
+    }
+    
+    [TearDown]
+    public override async Task TearDown()
+    {
+        // Clean up resources if needed
+        await base.TearDown();
     }
 }

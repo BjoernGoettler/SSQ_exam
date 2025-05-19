@@ -6,8 +6,8 @@ public abstract class TestBase
 {
     private static readonly SemaphoreSlim _initLock = new(1, 1);
     private static readonly TestDatabaseFixture TestDatabaseFixture = new();
+    //protected DatabaseContext DbContext => TestDatabaseFixture.CreateNewDatabaseContext();
     protected DatabaseContext DbContext => TestDatabaseFixture.DbContext;
-
     [OneTimeSetUp]
     public async Task OneTimeSetUp()
     {
@@ -31,14 +31,16 @@ public abstract class TestBase
     }
 
     [TearDown]
-    public async Task TearDown()
+    public virtual async Task TearDown()
     {
-        // Common cleanup for all tests
-        await OnTearDown();
-    }
-
-    protected virtual Task OnTearDown()
-    {
-        return Task.CompletedTask;
+        await _initLock.WaitAsync();
+        try
+        {
+            await DbContext.Database.EnsureDeletedAsync();
+        }
+        finally
+        {
+            _initLock.Release();
+        }
     }
 }

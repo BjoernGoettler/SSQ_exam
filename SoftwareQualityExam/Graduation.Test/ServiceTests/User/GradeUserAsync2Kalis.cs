@@ -7,13 +7,13 @@ using Microsoft.EntityFrameworkCore;
 namespace Graduation.Test.ServiceTests.User;
 
 [TestFixture]
-public class GetAllUsersAsyncTest : TestBase
+public class GradeUserAsync2Kalis : TestBase
 {
     [SetUp]
     public override async Task SetUp()
     {
-        await base.SetUp();
         _graduationService = new GraduationService(DbContext);
+        await DbContext.Database.EnsureCreatedAsync();
         await SeedTestData();
     }
 
@@ -22,27 +22,24 @@ public class GetAllUsersAsyncTest : TestBase
     private async Task SeedTestData()
     {
         await DbContext.Users.ExecuteDeleteAsync();
-        await DbContext.GraduationDetails.ExecuteDeleteAsync();
-        await DbContext.Users.AddRangeAsync(DatabaseUsers.ValidDatabaseUser5, DatabaseUsers.ValidDatabaseUser6);
+        
+        await DbContext.Users.AddAsync(DatabaseUsers.UserWith2Kalis);
         await DbContext.SaveChangesAsync();
     }
 
     [Test]
-    public async Task TestGetAllUsersAsync()
+    public async Task TestGradeUserAsync2Kalis()
     {
-        var users = await _graduationService.GetAllUsersAsync();
+        var user = DtoUsers.UserWith2Kalis;
+        var actualUserOut = await _graduationService.GradeUserAsync(user);
 
         Assert.Multiple(() =>
         {
-            Assert.That(users, Is.Not.Null);
-            Assert.That(users.Count, Is.EqualTo(2));
+            Assert.That(actualUserOut, Is.Not.Null);
+            Assert.That(actualUserOut.Id, Is.EqualTo(user.Id));
+            Assert.That(actualUserOut.Rank, Is.EqualTo(DatabaseUsers.UserWith2Kalis.Rank));
+            Assert.That(actualUserOut.Kalis, Is.EqualTo(0));
         });
     }
-    [TearDown]
-    public override async Task TearDown()
-    {
-        // Clean up resources if needed
-        await base.TearDown();
-    }
-   
+    
 }

@@ -9,10 +9,22 @@ namespace Graduation.Test.Fixtures;
 public class TestDatabaseFixture
 {
     private static readonly object Lock = new();
+    private static readonly object Lock2 = new object();
+    
     private static bool _initialized;
     private static ServiceProvider _serviceProvider;
     private static SqliteConnection _connection;
 
+    public DatabaseContext CreateNewDatabaseContext()
+    {
+        lock (Lock2)
+        {
+            return new DatabaseContext(new DbContextOptionsBuilder<DatabaseContext>()
+                .UseSqlite(_connection)
+                .Options);
+
+        }
+    }
     public static DatabaseContext DbContext { get; private set; }
 
     [OneTimeSetUp]
@@ -29,7 +41,7 @@ public class TestDatabaseFixture
             services.AddDbContext<DatabaseContext>(options =>
                     options.UseSqlite(_connection)
                         .EnableSensitiveDataLogging(),
-                ServiceLifetime.Singleton);
+                ServiceLifetime.Scoped);
 
             _serviceProvider = services.BuildServiceProvider();
             DbContext = _serviceProvider.GetRequiredService<DatabaseContext>();

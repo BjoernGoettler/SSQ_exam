@@ -22,6 +22,7 @@ public class CreateAsyncTest : TestBase
     private async Task SeedTestData()
     {
         await DbContext.Users.ExecuteDeleteAsync();
+        await DbContext.SaveChangesAsync();
     }
 
     [Test]
@@ -31,6 +32,7 @@ public class CreateAsyncTest : TestBase
 
         var actualGraduationDetail = await _graduationRepository.CreateAsync(graduationDetail);
 
+
         Assert.Multiple(() =>
         {
             Assert.That(actualGraduationDetail, Is.Not.Null);
@@ -39,5 +41,12 @@ public class CreateAsyncTest : TestBase
             Assert.That(actualGraduationDetail.GraduationDate, Is.EqualTo(graduationDetail.GraduationDate));
             Assert.That(actualGraduationDetail.CreatedAt, Is.EqualTo(graduationDetail.CreatedAt));
         });
+    }
+    
+    [TearDown]
+    public override async Task TearDown()
+    {
+        // Clean up resources if needed
+        await base.TearDown();
     }
 }

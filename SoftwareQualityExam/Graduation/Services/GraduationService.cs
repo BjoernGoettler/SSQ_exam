@@ -3,7 +3,6 @@ using Graduation.DataTransferObjects;
 using Graduation.Exceptions;
 using Graduation.Infrastructure;
 using Graduation.Interfaces;
-using Graduation.Migrations;
 using Graduation.Models;
 using Graduation.Repositories;
 using Microsoft.Data.Sqlite;
@@ -98,16 +97,16 @@ public class GraduationService : IGraduationService
         }).ToList();
     }
 
-    public async Task<UserOut> GradeUser(UserDto userDto)
+    public async Task<UserOut> GradeUserAsync(UserDto userDto)
     {
         User updatedUser;
 
         var user = await _graduationRepository.GetUserByIdAsync(userDto.Id);
-        
+
         // Make sure the grated karate ka is not getting a lower rank
-        if(user.Rank > userDto.Rank)
+        if (user.Rank > userDto.Rank)
         {
-            var errorMessage = $"Downgrading a karate kas rank is disallowed";
+            var errorMessage = "Downgrading a karate kas rank is disallowed";
             throw new RankDemotionException(errorMessage);
         }
 
@@ -140,7 +139,7 @@ public class GraduationService : IGraduationService
 
         user.Kalis = userDto.Kali ? user.Kalis + 1 : user.Kalis;
         user.Rank = userDto.Rank;
-        
+
         updatedUser = await _graduationRepository.UpdateUserAsync(user);
 
         return new UserOut
@@ -151,5 +150,4 @@ public class GraduationService : IGraduationService
             Kalis = user.Kalis
         };
     }
-
 }
