@@ -3,6 +3,7 @@ using Graduation.DataTransferObjects;
 using Graduation.Exceptions;
 using Graduation.Infrastructure;
 using Graduation.Interfaces;
+using Graduation.Migrations;
 using Graduation.Models;
 using Graduation.Repositories;
 using Microsoft.Data.Sqlite;
@@ -96,4 +97,59 @@ public class GraduationService : IGraduationService
             Kalis = x.Kalis
         }).ToList();
     }
+
+    public async Task<UserOut> GradeUser(UserDto userDto)
+    {
+        User updatedUser;
+
+        var user = await _graduationRepository.GetUserByIdAsync(userDto.Id);
+        
+        // Make sure the grated karate ka is not getting a lower rank
+        if(user.Rank > userDto.Rank)
+        {
+            var errorMessage = $"Downgrading a karate kas rank is disallowed";
+            throw new RankDemotionException(errorMessage);
+        }
+
+        if (!userDto.Kali)
+        {
+            user.Rank = userDto.Rank;
+            user.Kalis = 0;
+            updatedUser = await _graduationRepository.UpdateUserAsync(user);
+            return new UserOut
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Rank = user.Rank,
+                Kalis = user.Kalis
+            };
+        }
+
+        if (userDto.Kali && user.Kalis == 2)
+        {
+            user.Kalis = 0;
+            updatedUser = await _graduationRepository.UpdateUserAsync(user);
+            return new UserOut
+            {
+                Id = updatedUser.Id,
+                Name = updatedUser.Name,
+                Rank = updatedUser.Rank,
+                Kalis = updatedUser.Kalis
+            };
+        }
+
+        user.Kalis = userDto.Kali ? user.Kalis + 1 : user.Kalis;
+        user.Rank = userDto.Rank;
+        
+        updatedUser = await _graduationRepository.UpdateUserAsync(user);
+
+        return new UserOut
+        {
+            Id = user.Id,
+            Name = user.Name,
+            Rank = userDto.Rank,
+            Kalis = user.Kalis
+        };
+    }
+
 }

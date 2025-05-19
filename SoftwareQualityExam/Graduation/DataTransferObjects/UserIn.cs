@@ -4,5 +4,5 @@ public class UserIn
 {
     public string Name { get; set; }
     public int Rank { get; set; }
-    public int Kalis { get; set; }
+    public bool Kali { get; set; }
 }
