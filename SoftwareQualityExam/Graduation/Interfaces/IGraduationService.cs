@@ -8,4 +8,6 @@ public interface IGraduationService
     public Task<List<GraduationDetailOut>> GetAllAsync();
     
     public Task<GraduationDetailOut> CreateAsync(GraduationDetailIn graduationDetail);
+    
+    public Task<UserOut> CreateUserAsync(UserIn user);
 }
