@@ -4,7 +4,7 @@ using Graduation.Services;
 using Graduation.Test.Fixtures;
 using Microsoft.EntityFrameworkCore;
 
-namespace Graduation.Test.ServiceTests;
+namespace Graduation.Test.ServiceTests.Graduation;
 
 [TestFixture]
 public class GetAllAsyncTest: TestBase
@@ -14,31 +14,20 @@ public class GetAllAsyncTest: TestBase
     
     private IGraduationService _graduationService ;
     [SetUp]
-    public override void SetUp()
+    public override async Task SetUp()
     {
-        base.SetUp();
+        await base.SetUp();
         _graduationService = new GraduationService(DbContext);
         
         // Optionally: Seed specific test data for this test class
-        SeedTestData();
+        await SeedTestData();
     }
     
-    private void SeedTestData()
+    private async  Task SeedTestData()
     {
-        DbContext.GraduationDetails.ExecuteDelete();
-        
-        if (!DbContext.GraduationDetails.Any())
-        {
-            _graduationDetail = new GraduationDetail
-            {
-                Name = "TestGraduation",
-                GraduationDate = new DateOnly(2025, 5, 2),
-                CreatedAt = DateTime.Now
-            };
-            DbContext.GraduationDetails.Add(_graduationDetail);
-            
-            DbContext.SaveChanges();
-        }
+        await DbContext.GraduationDetails.ExecuteDeleteAsync();
+        await DbContext.GraduationDetails.AddRangeAsync(TestData.TestGraduationDetails.ValidGraduationDetails);
+        await DbContext.SaveChangesAsync();
     }
 
     [Test]
@@ -48,7 +37,7 @@ public class GetAllAsyncTest: TestBase
         Assert.Multiple(() =>
         {
             Assert.That(allDetails, Is.Not.Empty);
-            Assert.That(allDetails.Count, Is.AtLeast(1));
+            Assert.That(allDetails.Count, Is.AtLeast(2));
 
         });
     }

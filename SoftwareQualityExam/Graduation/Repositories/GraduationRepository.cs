@@ -47,4 +47,40 @@ public class GraduationRepository: IGraduationRepository
         return result > 0;
     }
 
+    public async Task<User> CreateUserAsync(User user)
+    {
+        await _databaseContext.Users.AddAsync(user);
+        await _databaseContext.SaveChangesAsync();
+        return user;
+    }
+
+    public async Task<User> GetUserByIdAsync(int id)
+    {
+        var user = await _databaseContext.Users.FirstAsync(x => x.Id == id);
+        if (user == null)
+        {
+            throw new KeyNotFoundException($"User with id {id} not found.");
+        }
+
+        return user;
+    }
+
+    public async Task<User> UpdateUserAsync(User user)
+    {
+        _databaseContext.Users.Update(user);
+        var _ = await _databaseContext.SaveChangesAsync();
+        return user;
+    }
+
+    public async Task<bool> DeleteUserAsync(int id)
+    {
+        var user = await GetUserByIdAsync(id);
+        _databaseContext.Users.Remove(user);
+        var result = await _databaseContext.SaveChangesAsync();
+        return result > 0;
+    }
+
+    public async Task<List<User>> GetAllUsersAsync()
+        => await _databaseContext.Users.ToListAsync();
+
 }

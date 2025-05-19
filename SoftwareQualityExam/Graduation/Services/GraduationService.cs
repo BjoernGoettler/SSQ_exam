@@ -2,6 +2,7 @@ using Graduation.DataTransferObjects;
 using Graduation.Exceptions;
 using Graduation.Infrastructure;
 using Graduation.Interfaces;
+using Graduation.Migrations;
 using Graduation.Models;
 using Graduation.Repositories;
 
@@ -65,8 +66,29 @@ public class GraduationService: IGraduationService
             
             throw;
         }
-        
-
-        
+    }
+    
+    public async Task<UserOut> CreateUserAsync(UserIn userIn)
+    {
+        var user = new User
+        {
+            Name = userIn.Name
+        };
+        var createdUser = await _graduationRepository.CreateUserAsync(user);
+        return new UserOut
+        {
+            Id = createdUser.Id,
+            Name = createdUser.Name
+        };
+    }
+    
+    public async Task<List<UserOut>> GetAllUsersAsync()
+    {
+        var users = await _graduationRepository.GetAllUsersAsync();
+        return users.Select(x => new UserOut
+        {
+            Id = x.Id,
+            Name = x.Name
+        }).ToList();
     }
 }

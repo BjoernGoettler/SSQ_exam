@@ -2,8 +2,10 @@ using Graduation.Interfaces;
 using Graduation.Models;
 using Graduation.Repositories;
 using Graduation.Test.Fixtures;
+using Graduation.Test.TestData;
+using Microsoft.EntityFrameworkCore;
 
-namespace Graduation.Test.RepositoryTests;
+namespace Graduation.Test.RepositoryTests.Graduation;
 
 [TestFixture]
 public class CreateAsyncTest: TestBase
@@ -11,21 +13,22 @@ public class CreateAsyncTest: TestBase
     private IGraduationRepository _graduationRepository ;
     
     [SetUp]
-    public override void SetUp()
+    public override async Task SetUp()
     {
-        base.SetUp();
+        await base.SetUp();
         _graduationRepository = new GraduationRepository(DbContext);
+        await SeedTestData();
     }
-    
+
+    private async Task SeedTestData()
+    {
+        await DbContext.Users.ExecuteDeleteAsync();
+    }
+
     [Test]
     public async Task TestCreateAsync()
     {
-        GraduationDetail graduationDetail = new GraduationDetail
-        {
-            Name = "TestGraduation",
-            GraduationDate = new DateOnly(2025, 5, 1),
-            CreatedAt = DateTime.Now
-        };
+        GraduationDetail graduationDetail = TestGraduationDetails.ValidGraduationDetails1;
         
         var actualGraduationDetail = await _graduationRepository.CreateAsync(graduationDetail);
         
