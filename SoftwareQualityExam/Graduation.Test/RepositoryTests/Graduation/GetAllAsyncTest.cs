@@ -8,31 +8,29 @@ using Microsoft.EntityFrameworkCore;
 namespace Graduation.Test.RepositoryTests.Graduation;
 
 [TestFixture]
-public class GetAllAsyncTest: TestBase
+public class GetAllAsyncTest : TestBase
 {
-    private GraduationDetail _graduationDetail;
-    private int expectedId = 1;
-    
-    
-    private IGraduationRepository _graduationRepository ;
     [SetUp]
     public override async Task SetUp()
     {
         await base.SetUp();
         _graduationRepository = new GraduationRepository(DbContext);
-        
+
         // Optionally: Seed specific test data for this test class
         await SeedTestData();
     }
-    
+
+    private GraduationDetail _graduationDetail;
+    private readonly int expectedId = 1;
+
+
+    private IGraduationRepository _graduationRepository;
+
     private async Task SeedTestData()
     {
         await DbContext.GraduationDetails.ExecuteDeleteAsync();
-        await DbContext.GraduationDetails.AddRangeAsync(new[]
-        {
-            TestGraduationDetails.ValidGraduationDetails1,
-            TestGraduationDetails.ValidGraduationDetails2,
-        });
+        await DbContext.GraduationDetails.AddRangeAsync(TestGraduationDetails.ValidGraduationDetails1,
+            TestGraduationDetails.ValidGraduationDetails2);
         await DbContext.SaveChangesAsync();
     }
 
@@ -45,7 +43,6 @@ public class GetAllAsyncTest: TestBase
             Assert.That(allDetails, Is.Not.Empty);
             Assert.That(allDetails.Count, Is.EqualTo(1));
             Assert.That(allDetails[0].Id, Is.EqualTo(expectedId));
-
         });
     }
 }

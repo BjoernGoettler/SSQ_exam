@@ -1,17 +1,19 @@
+using Graduation.Core;
 using Graduation.DataTransferObjects;
 using Graduation.Exceptions;
 using Graduation.Infrastructure;
 using Graduation.Interfaces;
-using Graduation.Migrations;
 using Graduation.Models;
 using Graduation.Repositories;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 
 namespace Graduation.Services;
 
-public class GraduationService: IGraduationService
+public class GraduationService : IGraduationService
 {
-    private readonly IGraduationRepository _graduationRepository;
     private readonly DatabaseContext _databaseContext;
+    private readonly IGraduationRepository _graduationRepository;
 
     public GraduationService(DatabaseContext databaseContext)
     {
@@ -33,7 +35,7 @@ public class GraduationService: IGraduationService
 
     public async Task<GraduationDetailOut> CreateAsync(GraduationDetailIn graduationDetailIn)
     {
-        GraduationDetail graduationDetail = new GraduationDetail
+        var graduationDetail = new GraduationDetail
         {
             Name = graduationDetailIn.Name,
             GraduationDate = graduationDetailIn.GraduationDate,
@@ -50,45 +52,48 @@ public class GraduationService: IGraduationService
                 GraduationDate = actualGraduationDetail.GraduationDate,
                 CreatedAt = actualGraduationDetail.CreatedAt
             };
-
         }
-        catch (Microsoft.EntityFrameworkCore.DbUpdateException e)
+        catch (DbUpdateException e)
         {
-            if (e.InnerException is Microsoft.Data.Sqlite.SqliteException)
-            {
+            if (e.InnerException is SqliteException)
                 if (e.InnerException.Message.StartsWith("SQLite Error 19: 'UNIQUE constraint failed"))
                 {
                     var errorMessage =
                         $"Another graduation is already registered on {graduationDetailIn.GraduationDate}.";
                     throw new DuplicateEntryException(errorMessage);
                 }
-            }
-            
+
             throw;
         }
     }
-    
+
     public async Task<UserOut> CreateUserAsync(UserIn userIn)
     {
         var user = new User
         {
-            Name = userIn.Name
+            Name = userIn.Name,
+            Rank = Ranks.Kyu10,
+            Kalis = 0
         };
         var createdUser = await _graduationRepository.CreateUserAsync(user);
         return new UserOut
         {
             Id = createdUser.Id,
-            Name = createdUser.Name
+            Name = createdUser.Name,
+            Rank = createdUser.Rank,
+            Kalis = createdUser.Kalis
         };
     }
-    
+
     public async Task<List<UserOut>> GetAllUsersAsync()
     {
         var users = await _graduationRepository.GetAllUsersAsync();
         return users.Select(x => new UserOut
         {
             Id = x.Id,
-            Name = x.Name
+            Name = x.Name,
+            Rank = x.Rank,
+            Kalis = x.Kalis
         }).ToList();
     }
 }

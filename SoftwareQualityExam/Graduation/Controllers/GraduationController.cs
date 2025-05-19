@@ -7,21 +7,23 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Graduation.Controllers;
 
-public class GraduationController: ControllerBase
+public class GraduationController : ControllerBase
 {
-    private readonly IGraduationService _graduationService;
     private readonly DatabaseContext _databaseContext;
+    private readonly IGraduationService _graduationService;
 
     public GraduationController(DatabaseContext databaseContext)
     {
         _databaseContext = databaseContext;
         _graduationService = new GraduationService(_databaseContext);
     }
-    
+
     [HttpGet]
     [Route("api/graduation")]
     public async Task<ActionResult<List<GraduationDetailOut>>> GetAllAsync()
-        => await _graduationService.GetAllAsync();
+    {
+        return await _graduationService.GetAllAsync();
+    }
 
     [HttpPost]
     [Route("api/graduation")]
@@ -33,7 +35,8 @@ public class GraduationController: ControllerBase
         }
         catch (DuplicateEntryException)
         {
-            var errorMessage = $"Another graduation is already registered on this date {graduationDetailIn.GraduationDate}.";
+            var errorMessage =
+                $"Another graduation is already registered on this date {graduationDetailIn.GraduationDate}.";
             return Conflict(errorMessage);
         }
     }

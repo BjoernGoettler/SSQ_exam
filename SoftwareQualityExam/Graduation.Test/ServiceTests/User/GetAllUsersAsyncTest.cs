@@ -8,8 +8,6 @@ namespace Graduation.Test.ServiceTests.User;
 [TestFixture]
 public class GetAllUsersAsyncTest : TestBase
 {
-    private IGraduationService _graduationService;
-
     [SetUp]
     public override async Task SetUp()
     {
@@ -18,14 +16,13 @@ public class GetAllUsersAsyncTest : TestBase
         await SeedTestData();
     }
 
+    private IGraduationService _graduationService;
+
     private async Task SeedTestData()
     {
         await DbContext.Users.ExecuteDeleteAsync();
-        await DbContext.Users.AddRangeAsync(new[]
-        {
-            new Models.User { Id = 1, Name = "User1" },
-            new Models.User { Id = 2, Name = "User2" }
-        });
+        await DbContext.Users.AddRangeAsync(new Models.User { Id = 1, Name = "User1" },
+            new Models.User { Id = 2, Name = "User2" });
         await DbContext.SaveChangesAsync();
     }
 
@@ -33,7 +30,7 @@ public class GetAllUsersAsyncTest : TestBase
     public async Task TestGetAllUsersAsync()
     {
         var users = await _graduationService.GetAllUsersAsync();
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(users, Is.Not.Null);

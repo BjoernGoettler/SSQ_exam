@@ -1,27 +1,27 @@
 using Graduation.Models;
-namespace Graduation.Test.TestData;
 
+namespace Graduation.Test.TestData;
 
 public static class TestGraduationDetails
 {
-    public static readonly GraduationDetail ValidGraduationDetails1 = new GraduationDetail
+    public static readonly GraduationDetail ValidGraduationDetails1 = new()
     {
         Name = "Valid Test Graduation 1",
         GraduationDate = Dates.FixedDate,
         CreatedAt = DateTime.Now
     };
-    
-    public static readonly GraduationDetail ValidGraduationDetails2 = new GraduationDetail
+
+    public static readonly GraduationDetail ValidGraduationDetails2 = new()
     {
         Name = "Valid Test Graduation 2",
         GraduationDate = new DateOnly(2025, 5, 2),
         CreatedAt = DateTime.Now
     };
 
-    public static readonly GraduationDetail DuplicateGraduationDetail = new GraduationDetail
+    public static readonly GraduationDetail DuplicateGraduationDetail = new()
     {
         Name = "Duplicate Test Graduation",
-        GraduationDate = Dates.FixedDate,
+        GraduationDate = Dates.FixedDate
     };
 
     public static readonly GraduationDetail[] ValidGraduationDetails = new[]
@@ -35,9 +35,7 @@ public static class TestGraduationDetails
         new GraduationDetail
         {
             Name = "Second Valid Test Graduation in list",
-            GraduationDate = new DateOnly(2025, 5, 14),
+            GraduationDate = new DateOnly(2025, 5, 14)
         }
     };
-
-
 }

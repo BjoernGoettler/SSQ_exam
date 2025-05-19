@@ -25,10 +25,7 @@ using (var scope = app.Services.CreateScope())
 
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+if (app.Environment.IsDevelopment()) app.MapOpenApi();
 
 app.MapControllers();
 app.Run();
