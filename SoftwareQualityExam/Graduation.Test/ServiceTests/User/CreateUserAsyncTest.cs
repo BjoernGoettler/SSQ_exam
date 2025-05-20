@@ -19,7 +19,7 @@ public class CreateUserAsyncTest : TestBase
     }
 
     private IGraduationService _graduationService;
-    private readonly UserIn _userIn = DtoUsers.ValidDtoUserIn1;
+    private readonly UserInNew _userInNew = DtoUsers.ValidDtoUserIn1;
 
     private async Task SeedTestData()
     {
@@ -32,13 +32,13 @@ public class CreateUserAsyncTest : TestBase
     [Test]
     public async Task TestCreateUserAsync()
     {
-        var actualUser = await _graduationService.CreateUserAsync(_userIn);
+        var actualUser = await _graduationService.CreateUserAsync(_userInNew);
 
         Assert.Multiple(() =>
         {
             Assert.That(actualUser, Is.Not.Null);
             Assert.That(actualUser.Id, Is.GreaterThan(0));
-            Assert.That(actualUser.Name, Is.EqualTo(_userIn.Name));
+            Assert.That(actualUser.Name, Is.EqualTo(_userInNew.Name));
         });
     }
     [TearDown]
