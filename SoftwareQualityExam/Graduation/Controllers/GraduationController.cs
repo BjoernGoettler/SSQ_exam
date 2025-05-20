@@ -40,4 +40,31 @@ public class GraduationController : ControllerBase
             return Conflict(errorMessage);
         }
     }
+
+    [HttpPost]
+    [Route("api/user")]
+    public async Task<ActionResult<UserOut>> CreateUserAsync([FromBody] UserInNew userInNew)
+        => await _graduationService.CreateUserAsync(userInNew);
+    
+    [HttpGet]
+    [Route("api/user")]
+    public async Task<ActionResult<List<UserOut>>> GetAllUsersAsync()
+        => await _graduationService.GetAllUsersAsync();
+
+    [HttpPut]
+    [Route("api/user/grade")]
+    public async Task<ActionResult<UserOut>> GradeUserAsync([FromBody] UserDto userDto)
+    {
+        try
+        {
+            var user = await _graduationService.GradeUserAsync(userDto);
+            return user;
+
+        }
+        catch (Graduation.Exceptions.RankDemotionException e)
+        {
+            return UnprocessableEntity(e.Message);
+        }
+    } 
+    
 }
