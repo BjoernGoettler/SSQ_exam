@@ -67,11 +67,11 @@ public class GraduationService : IGraduationService
         }
     }
 
-    public async Task<UserOut> CreateUserAsync(UserIn userIn)
+    public async Task<UserOut> CreateUserAsync(UserInNew userInNew)
     {
         var user = new User
         {
-            Name = userIn.Name,
+            Name = userInNew.Name,
             Rank = Ranks.Kyu10,
             Kalis = 0
         };
@@ -144,10 +144,10 @@ public class GraduationService : IGraduationService
 
         return new UserOut
         {
-            Id = user.Id,
-            Name = user.Name,
-            Rank = userDto.Rank,
-            Kalis = user.Kalis
+            Id = updatedUser.Id,
+            Name = updatedUser.Name,
+            Rank = updatedUser.Rank,
+            Kalis = updatedUser.Kalis
         };
     }
 }
