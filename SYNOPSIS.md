@@ -34,11 +34,11 @@ The project aims to demonstrate some key elements of testing software
 
 ## Helicopter view description of application
 
-  The application is a .NET MVC application with a repository that deals with database interaction. SQLite was chosen for the database, for the sake of testability. More on that later
-  Any logic/sanitation that is not enforced be database integrity, is done in the service layer
-  Finaly a controller layer communcates with the service layer. All methods a async
+The application is a .NET MVC application with a repository that deals with database interaction. SQLite was chosen for the database, for the sake of testability. More on that later
+Any logic/sanitation that is not enforced be database integrity, is done in the service layer
+Finaly a controller layer communcates with the service layer. All methods a async
 
-  ![Visual representation of the application](images/GraduationService.png)
+![Visual representation of the application](images/GraduationService.png)
 
   
 ## Tests
@@ -49,13 +49,20 @@ Nunit is running the Unit tests, and an attempt has been made to follow its nami
 Unit tests are organised in its own project, that references the Graduation project
 The test project aims to reflect the application structure, meaning that Repository and Service has their own folder, where tests once again is organized in Users and Gradutation
 
-![Test layout](images/testLayout.png)
+
+![Test layout](images/testLayout.png){width=100% .left}
+
+
+\newpage
+
 
 With hindsight the choise of database could have been better. It solves what it is supposed to do in the application, but when it comes to tests a rather complex setup had to be introduced, going towards the level of complexity that in it self would need testing.
 A Mocked solution could have removed a quite substansial part of the setup, maybe not resulting in reduced codes (when counting lines), but it would be simpler to look at
 
 When testing methods with side effects in the service layer (everything but CreateUserAsync and GetAllUsersAsync), the tests rely on data allready existing in the database. To ensure that tests are deterministic, the test project has a static class called TestData, that can be used in all setups of test. Ficed Dates and Id's has been split out in its own static class, so that it can be referenced both when seeding data, but also when asserting the returned data
 Ex.
+
+
 ```csharp
 using Graduation.Core;
 
@@ -73,6 +80,7 @@ public static class SharedValues
     public static readonly Ranks userWith2KalisRank = Ranks.Dan1;
 }
 ```
+
 
 ### Functional tests
 
