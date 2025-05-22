@@ -1,5 +1,10 @@
 # Synopsis
 
+
+### Github Repository
+The Github repo is here: https://github.com/BjoernGoettler/SSQ_exam
+
+
 ## Description
 
 A minimal solution for grading practitioners (a karate ka, from here on) of Shotokan Karate
